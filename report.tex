@@ -1,0 +1,121 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage,url}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{float}
+\usepackage[letterpaper,top=1in,bottom=1in,left=1in,right=1in,nohead]{geometry}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{6pt}
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Unif}{Unif}
+
+\begin{document}
+
+{\large{\bf Name:Abhinav Pappu} {\hspace{3in}}}
+
+{\large{\bf Date: 09/22/24} {\hspace{3in}}}
+{\LARGE{\bf PS1 Report}}
+
+\vspace{0.2\baselineskip}
+\hrule
+
+\section*{Problem 1 Proofs}
+\begin{enumerate}
+    \item {\bf Associativity}
+    
+\begin{align*}
+    (f * g) * h &= f * (g * h) & \text{Definition of Associativity} \\
+    &=((g*h)*f)(t) & \text{rearrange and expand} \\
+    &=\int_{0}^{t} ((g*h)(s)f(t-s) \, ds  & \text{substitute definition} \\
+    &=\int_{0}^{t} \left(\int_{0}^{s} g(v)h(s-v) \, dv\right)f(t-s) \, ds & \text{substitute definition}\\
+    &=\int_{0}^{t} g(v)\left(\int_{0}^{t-v} h(s-v)f(t-s) \, ds\right) \, dv & \text{swap w/ Fubini's}\\
+    &=\int_{0}^{t}g(v) \left(\int_{0}^{t-v} h(u)f(t-v-u) \, du\right) \, dv & \text{simplify, let u = s-v}\\
+    &=\int_{0}^{t} g(v)(h*f)(t-v) \, dv & \text{definition}\\
+    &= g*(h*f)
+\end{align*}
+    
+\item \textbf{Distributivity}    
+\begin{align*}
+    f * (g+h) &= f*g + f*h & \text{Definition of Distributivity}\\
+    &= (f*g)(t) + (f*h)(t) & \text{expand}\\
+    &= \int_{-\infty}^{\infty} f(s)g(t-s) \, ds + \int_{-\infty}^{\infty} f(s)h(t-s) \, ds & \text{substitute definition}\\
+    &= \int_{-\infty}^{\infty} f(s)(g(t-s) + h(t-s)) \, ds & \text{combine integrals}\\
+    &= \int_{-\infty}^{\infty} f(s)((g+h)(t-s)) \, ds & \text{substitute definition}\\
+    &= (f * (g+h))(t)
+\end{align*}
+
+\item {\bf Differentiation Rule}
+\begin{align*}
+    (f*g)' &= f' *g = f* g' \\
+    \mathscr{F}(f * g) &= \mathscr{F}(f * g) && \text{} \\
+    &= \frac{d}{dt} \int_{-\infty}^{\infty} f(s)g(t-s) \, ds && \text{expand} \\
+    &= \int_{-\infty}^{\infty}\frac{\partial}{\partial t}g(t-s) \, ds && \text{Leibniz rule} \\
+    &= \int_{-\infty}^{\infty} f(s)g'(t-s) \, ds && \text{simplify} \\
+    &= f*g' && \text{substitute definition}
+\end{align*}
+\item {\bf Convolution Theorem}
+\begin{align*}
+    F(f*g) &= F(f)F(g) = \hat{f}\hat{g} \\
+    &= F^{-1}(\hat{f}\hat{g})(x) && \text{inverse Fourier transform} \\
+    &= \frac{1}{2\pi} \int_{-\infty}^{\infty} \hat{f}(\omega)\hat{g}(\omega)e^{i\omega x} \, d\omega && \text{substitute definition of} \\
+    &&& \text{inverse Fourier Transform} \\
+    &= \int_{-\infty}^{\infty} g(y)\frac{1}{2\pi}\int_{-\infty}^{\infty} \hat{f}(\omega)e^{i\omega(x-y)}\, d\omega \, dy && \text{Fubini's Theorem} \\
+    &= \int_{-\infty}^{\infty} g(y)f(x-y) \, dy && \text{Substitute definition of} \\
+    &&& \text{inverse Fourier Transform} \\
+    &&& \text{for $f$ at $(x-y)$} \\
+    &= (g*f)(x) && \text{definition}
+\end{align*}
+\end{enumerate}
+
+\section*{Problem 2}
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=1.0\textwidth]{noisy_lenas.png}
+\caption{Lenas w/ different Filter sizes!}
+\label{fig:lena}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=0.8\textwidth]{noisyeinsteins.png}
+\caption{Einsteins with Gaussian Noise added at different Variances!}
+\label{fig:einstein}
+\end{center}
+\end{figure}
+
+
+\section*{Problem 3}
+
+The objective function that we are trying to minimize is:
+
+\begin{equation}
+min(E(u)) = \lambda \| f - u \|_{L^2}^2 + \int_\Omega \| \nabla u_i \|
+\end{equation}
+
+where $\lambda$ is the regularization parameter, $u$ is the denoised image, $f$ is the observed noisy image, $\Omega$ is the domain of the image, and $|\nabla u|$ is the total variation of $u$.
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=0.6\textwidth]{noisyanddnoisy.png}
+\caption{Noisy Einsteins with added Noise on top and denoised Einsteins after running Total Variation Denoising Algorithm. The hyperparameters used were $\lambda$ = 0.1, learning rate = 0.01, tolerance = 1x10^{-8}.}
+\label{fig:lena}
+\end{center}
+\end{figure}
+
+\FloatBarrier 
+
+\begin{figure}[H] 
+\begin{center}
+\includegraphics[width=0.6\textwidth]{energyiters.png}
+\caption{Graphs of calculated energy vs number of iterations for the respective Einstein images above.}
+\label{fig:lena}
+\end{center}
+\end{figure}
+
+\FloatBarrier % Prevent figures from floating past this point
+
+
+
+\end{document}
